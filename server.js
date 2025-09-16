@@ -22,11 +22,31 @@ app.post('/ajout', (req, res) => {
     
 
 });
-app.get('/byid/:id', (req, res) => {
+app.get('/list', (req, res) => {
     
-    id=req.params.id;
-    console.log('GET request received with id:', id);
-    res.send('Hello World! ID: '+id);
+    Article.find()
+    .then((articles) => {
+        res.send(articles);
+    })
+    .catch((error) => {
+        res.send('Error retrieving articles:', error);
+    });
+});
+
+app.get('/list/:id', (req, res) => {
+    let id = req.params.id;
+    Article.findById(id)
+    .then((article) => {
+        if(article){
+            res.send(article);
+        }else{
+            res.send('Article not found');
+        }
+        
+    })
+    .catch((error) => {
+        res.send('Error retrieving article:', error);
+    });
 });
 
 
