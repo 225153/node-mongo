@@ -1,13 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../../models/user');
+const bcrypt = require('bcrypt');
 
 
 router.post('/signup', (req, res) => {
     let data = req.body;
+    data.password = bcrypt.hashSync(data.password, 10);
     let user = new User(data);
     user.save()
-        .then(() => res.status(201).send('User registered successfully'))
+        .then((user) => 
+            user.password ='****',
+            res.status(201).send(user))
         .catch(err => res.status(400).send('Error registering user: ' + err.message));
 });
 
