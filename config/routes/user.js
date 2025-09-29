@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../models/user');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 router.post('/signup', (req, res) => {
@@ -22,8 +23,10 @@ router.post('/login', (req, res) => {
             (user) => {
                 if (user) {
                     if (bcrypt.compareSync(password, user.password)) {
-                        user.password = '****';
-                        res.status(200).send(user);
+                        let payload = { id: user._id, username: user.username, email: user.email };
+                        let token = jwt.sign(payload, '123456789', { expiresIn: '1h' });
+
+                        res.status(200).send({ user, token });
                     } else {
                         res.status(401).send('Invalid password');
                     }
