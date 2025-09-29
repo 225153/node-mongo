@@ -26,7 +26,7 @@ router.post('/login', (req, res) => {
                         let payload = { id: user._id, username: user.username, email: user.email };
                         let token = jwt.sign(payload, '123456789', { expiresIn: '1h' });
 
-                        res.status(200).send({ user, token });
+                        res.status(200).send(token);
                     } else {
                         res.status(401).send('Invalid password');
                     }
